@@ -2,6 +2,10 @@ var expect = require('chai').expect;
 const Person = require('../person.js');
 
 describe('should create a person', function() {
+	it ('should create with no parameter',() => {
+		 expect(() => new Person()).not.to.throw();
+	});
+
 	it ('should create with name', function () {
 		let jsonObj = {
 			name: 'Peter',
@@ -71,3 +75,22 @@ describe('should create a person', function() {
 		expect(person.children[0].parent.name).to.equal('Oscar');
 	})
 });
+
+describe('isMale', function () {
+	it('should return true when person is male', function () {
+		let person = new Person({
+			gender: 'male'
+		})
+
+		expect(person.isMale()).to.be.true;
+	})
+
+	it('should return false when person is female', function () {
+		let person = new Person({
+			gender: 'female'
+		})
+
+		expect(person.isMale()).not.to.be.undefined;
+		expect(person.isMale()).not.to.be.true;
+	})
+})

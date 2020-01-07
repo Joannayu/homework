@@ -37,6 +37,7 @@ class Tree {
 	}
 
 	getChildren(person) {
+		// get both parent's children;
 		return person.children;
 	}
 
@@ -181,6 +182,40 @@ class Tree {
 		let husbandsOfSiblings = this.getHusbandsOfSiblings(person);
 		
 		return [...brothersOfSpouse, ...husbandsOfSiblings];
+	}
+
+	addChild(motherName, childName, gender) {
+		let mother = this.findPersonByName(motherName);
+
+		// add child to the original member of King Arthur's family
+		if (this.isOriginalFamilyMember(mother)) {
+			this.addChildToPerson(mother, childName, gender);
+			return;
+		}
+
+		let spouse = this.getSpouse(mother);
+		this.addChildToPerson(spouse, childName, gender);
+	}
+
+	addChildToPerson(person, childName, gender) {
+		let child = new Person({
+				name: childName,
+				gender: gender.toLowerCase()
+			}, person);
+
+		person.children.push(child);
+	}
+
+	isOriginalFamilyMember(person) {
+		if (person.children && person.children.length > 0) {
+			return true;
+		}
+
+		console.log(person, person.parent);
+		if (person.parent) {
+			return true;
+		}
+		return false;
 	}
 }
 

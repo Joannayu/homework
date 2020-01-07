@@ -548,3 +548,137 @@ describe('get relationship in the tree', function() {
 		sandbox.restore();
 	});
 });
+
+describe('add child', function () {
+	var sandbox;
+	beforeEach(() => {
+		sandbox = sinon.createSandbox();
+	});
+
+	it('add child by given the name of an origianl family member', function () {
+		let tree = new Tree();
+		let person = new Person({
+			name: 'Lily',
+			children: [{
+				name: 'Nancy'
+			}, {
+				name: 'Mark'
+			}]
+		});
+		let spouse = new Person ({
+			name: 'Peter'
+		})
+		sandbox.stub(tree, 'findPersonByName').withArgs('Lily').returns(person);
+		sandbox.stub(tree, 'getSpouse').withArgs(person).returns(spouse);
+		sandbox.stub(tree, 'isOriginalFamilyMember').withArgs(person).returns(true);
+
+		tree.addChild('Lily', 'Angela', 'female');
+		expect(person.children.length).to.equal(3);
+		expect(person.children.map(p => p.name)).to.include('Angela');
+		expect(spouse.children.length).to.equal(0);
+	})
+
+	it('add child by given the spouse\'s name of an original family member', function () {
+		let tree = new Tree();
+		let spouse = new Person({
+			name: 'Peter',
+			children: [{
+				name: 'Nancy'
+			}, {
+				name: 'Mark'
+			}]
+		});
+		let person = new Person ({
+			name: 'Lily'
+		})
+
+		sandbox.stub(tree, 'findPersonByName').withArgs('Lily').returns(person);
+		sandbox.stub(tree, 'getSpouse').withArgs(person).returns(spouse);
+		sandbox.stub(tree, 'isOriginalFamilyMember').withArgs(person).returns(false);
+
+		tree.addChild('Lily', 'Angela', 'female');
+		expect(spouse.children.length).to.equal(3);
+		expect(spouse.children.map(p => p.name)).to.include('Angela');
+		expect(person.children.length).to.equal(0);
+	})
+
+	it('formatting: should always save lowercase gender info when adding to a spouse', function () {
+		let tree = new Tree();
+		let spouse = new Person({
+			name: 'Peter',
+			children: [{
+				name: 'Nancy'
+			}, {
+				name: 'Mark'
+			}]
+		});
+		let person = new Person ({
+			name: 'Lily'
+		})
+
+		sandbox.stub(tree, 'findPersonByName').withArgs('Lily').returns(person);
+		sandbox.stub(tree, 'getSpouse').withArgs(person).returns(spouse);
+		sandbox.stub(tree, 'isOriginalFamilyMember').withArgs(person).returns(false);
+
+		tree.addChild('Lily', 'Angela', 'Female')
+
+		expect(spouse.children.find(p => p.name === 'Angela').gender).to.equal('female');
+	})	
+
+	it('formatting: should always save lowercase gender info when adding to the original family member', function () {
+		let tree = new Tree();
+		let person = new Person({
+			name: 'Lily',
+			children: [{
+				name: 'Nancy'
+			}, {
+				name: 'Mark'
+			}]
+		});
+		let spouse = new Person ({
+			name: 'Peter'
+		})
+		sandbox.stub(tree, 'findPersonByName').withArgs('Lily').returns(person);
+		sandbox.stub(tree, 'getSpouse').withArgs(person).returns(spouse);
+		sandbox.stub(tree, 'isOriginalFamilyMember').withArgs(person).returns(true);
+
+		tree.addChild('Lily', 'Angela', 'Female')
+
+		expect(person.children.find(p => p.name === 'Angela').gender).to.equal('female');
+	})	
+
+	describe('is original member', function () {
+		it('if they have children', function () {
+			let tree = new Tree();
+			let person = new Person({
+				name: 'someone',
+				children: ['child1', 'child2', 'child3']
+			});
+			let result = tree.isOriginalFamilyMember(person);
+
+			expect(result).to.be.true;
+		})
+
+		it('if they have parents ', function () {
+			let tree = new Tree();
+			let person = new Person({
+				name: 'someone',
+			}, new Person());
+			let result = tree.isOriginalFamilyMember(person);
+
+			expect(result).to.be.true;
+		})
+
+		it('is not original member if they don\'t have parents or children info', function () {
+			let tree = new Tree();
+			let person = new Person({
+				name: 'someone',
+				gender: 'male'
+			});
+			let result = tree.isOriginalFamilyMember(person);
+
+			expect(result).to.be.false;
+		})
+	})
+	
+})

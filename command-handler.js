@@ -17,17 +17,40 @@ class CommandHandler {
 
 	executeLine(line) {
 		let params = line.split(' ');
-		if (params.length < 3) {
-			return;
-		}
 
 		switch(params[0]) {
-			case 'GET_RELATIONSHIP': 
+			case 'GET_RELATIONSHIP': {
+				if (params.length < 3) return;
 				this.getRelationship(params[1], params[2]);
+				break;
+			}
+				
+			case 'ADD_CHILD':
+				if (params.length < 4) return;
+				this.addChild(params[1], params[2], params[3]);
 				break;
 			default: 
 				return;
 		}
+	}
+
+	addChild(motherName, childName, gender) {
+		let person = this.tree.findPersonByName(motherName);
+
+		if (!person) {
+			console.log('PERSON_NOT_FOUND');
+			return;
+		}
+
+		if (person.isMale()) {
+			console.log('CHILD_ADDITION_FAILED');
+			return;
+		}
+
+		this.tree.addChild(motherName, childName, gender);
+		console.log('CHILD_ADDITION_SUCCEEDED');
+		return;
+
 	}
 
 	getRelationship(name, relationshipType) {

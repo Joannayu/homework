@@ -49,6 +49,35 @@ describe('analyze command: ',function () {
 		expect(getRelationshipStub.calledWithExactly('someName', 'Nephew')).to.be.true;
 	})
 
+	it('should not execute GET_RELATIONSHIP when parameters are not enough', function () {
+		let line = 'GET_RELATIONSHIP someName';
+		var getRelationshipStub = sandbox.stub(commandHandler, 'getRelationship');
+
+		expect(() => commandHandler.executeLine(line)).not.to.throw(); // executeLine is being called;
+
+		expect(getRelationshipStub.notCalled).to.be.true;
+	})
+
+
+	it('should execute ADD_CHILD command', function () {
+		let line = 'ADD_CHILD Flora Minerva Female';
+		var addChildStub = sandbox.stub(commandHandler, 'addChild');
+
+		commandHandler.executeLine(line);
+
+		expect(addChildStub.calledOnce).to.be.true;
+		expect(addChildStub.calledWithExactly('Flora', 'Minerva', 'Female')).to.be.true;
+	})
+
+	it('should not execute ADD_CHILD when parameters are not enough', function () {
+		let line = 'ADD_CHILD Flora Minerva';
+		var addChildStub = sandbox.stub(commandHandler, 'addChild');
+
+		expect(() => commandHandler.executeLine(line)).not.to.throw(); // executeLine is being called;
+
+		expect(addChildStub.notCalled).to.be.true;
+	})
+
 	it('should not execute undefined command' , function () {
 		let command = 'SOME_RANDOM_COMMAND someName Nephew';
 		var getRelationshipStub = sandbox.stub(commandHandler, 'getRelationship');
@@ -268,4 +297,63 @@ describe('execute GET_RELATIONSHIP', function () {
 			sandbox.restore();
 		});
 	})
+})
+
+describe('ADD_CHILD', function () {
+	var sandbox;
+	var commandHandler;
+	beforeEach(() => {
+		sandbox = sinon.createSandbox();
+		commandHandler = new CommandHandler({name: 'somePerson'});
+		sandbox.stub(console, 'log');//.callThrough();
+	});
+
+	it('should print success message for success', function () {
+		let findPersonStub = sandbox.stub(commandHandler.tree, 'findPersonByName').returns(new Person());
+		let addChildStub = sandbox.stub(commandHandler.tree, 'addChild');
+
+		commandHandler.addChild('motherName', 'childName', 'male');
+
+		expect(console.log.calledOnce).to.be.true;
+		expect(console.log.calledWithExactly('CHILD_ADDITION_SUCCEEDED')).to.be.true;
+  		expect(addChildStub.calledWithExactly('motherName', 'childName', 'male')).to.be.true;
+  		expect(findPersonStub.calledOnce).to.be.true;
+  		expect(addChildStub.calledOnce).to.be.true;
+	});
+
+	it('should print fail message when mother turns out to be male', function () {
+		let person = new Person({
+				name: 'Peter Parker',
+				gender: 'male'
+			});
+		let findPersonStub = sandbox.stub(commandHandler.tree, 'findPersonByName')
+			.withArgs('maleName')
+			.returns(person);
+		let addChildStub = sandbox.stub(commandHandler.tree, 'addChild');
+		let isMaleStub = sandbox.stub(person, 'isMale').returns(true);
+
+		commandHandler.addChild('maleName', 'childName', 'female');
+
+		expect(console.log.calledOnce).to.be.true;
+		expect(console.log.calledWithExactly('CHILD_ADDITION_FAILED')).to.be.true;
+		expect(findPersonStub.calledOnce).to.be.true;
+		expect(addChildStub.notCalled).to.be.true;
+		expect(isMaleStub.calledOnce).to.be.true;
+	});
+
+	it('should print PERSON_NOT_FOUND when mother name is not found', function () {
+		let findPersonStub = sandbox.stub(commandHandler.tree, 'findPersonByName').returns(undefined);
+		let addChildStub = sandbox.stub(commandHandler.tree, 'addChild');
+
+		commandHandler.addChild('motherName', 'childName', 'male');
+
+		expect(console.log.calledOnce).to.be.true;
+  		expect(console.log.calledWith('PERSON_NOT_FOUND')).to.be.true;
+  		expect(findPersonStub.calledOnce).to.be.true;
+  		expect(addChildStub.notCalled).to.be.true;
+	})
+
+	afterEach(() => {
+		sandbox.restore();
+	});
 })

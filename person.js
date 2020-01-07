@@ -1,5 +1,9 @@
 class Person {
 	constructor(jsonObj, parent) {
+		if (!jsonObj) {
+			return;
+		}
+
 		this.name = jsonObj.name;
 		this.gender = jsonObj.gender;
 		this.parent = parent;
@@ -14,6 +18,14 @@ class Person {
 				this.children.push(new Person(jsonChild, this));
 			});
 		}
+	}
+
+	isMale() {
+		if (this.gender === 'male') {
+			return true;
+		} 
+
+		return false;
 	}
 };
 

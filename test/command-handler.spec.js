@@ -90,7 +90,7 @@ describe('handle command: GET_RELATIONSHIP', function () {
 	});
 })
 
-describe ('handle each relationship:', function () {
+describe ('handle command for each relationship type', function () {
 	var sandbox;
 	beforeEach(function() {
 		sandbox = sinon.createSandbox();

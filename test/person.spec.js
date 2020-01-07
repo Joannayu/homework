@@ -1,7 +1,7 @@
 var expect = require('chai').expect;
 const Person = require('../person.js');
 
-describe('should create person - ', function() {
+describe('should create person', function() {
 	it ('should create with name', function () {
 		let jsonObj = {
 			name: 'Peter',

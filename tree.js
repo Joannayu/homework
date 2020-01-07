@@ -37,18 +37,18 @@ class Tree {
 	}
 
 	getChildren(person) {
-		// get both parent's children;
-		return person.children;
+		if (!person) {
+			return [];
+		}
+		return [...person.children, ...this.getSpouse(person).children]; // adding both parent's children.
 	}
 
 	getSiblings(person) {
-		let parents = this.getParents(person);
+		if(!person || !person.parent) {
+			return [];
+		}
 
-		let parentsChildren = [];
-		parents.forEach(p => {
-			parentsChildren.push(...this.getChildren(p));
-		});
-
+		let parentsChildren = this.getChildren(person.parent);
 		let siblings = parentsChildren.filter(p => p.name !== person.name);
 
 		return siblings;
@@ -187,7 +187,7 @@ class Tree {
 	addChild(motherName, childName, gender) {
 		let mother = this.findPersonByName(motherName);
 
-		// add child to the original member of King Arthur's family
+		// add child to the original member of King Arthur's family to keep the tree clean.
 		if (this.isOriginalFamilyMember(mother)) {
 			this.addChildToPerson(mother, childName, gender);
 			return;
@@ -197,6 +197,7 @@ class Tree {
 		this.addChildToPerson(spouse, childName, gender);
 	}
 
+	// private
 	addChildToPerson(person, childName, gender) {
 		let child = new Person({
 				name: childName,
@@ -206,12 +207,12 @@ class Tree {
 		person.children.push(child);
 	}
 
+	// private
 	isOriginalFamilyMember(person) {
 		if (person.children && person.children.length > 0) {
 			return true;
 		}
 
-		console.log(person, person.parent);
 		if (person.parent) {
 			return true;
 		}

@@ -139,45 +139,59 @@ describe('get relationship in the tree', function() {
 			expect(parentsArray.length).to.equal(0);
 		})
 	})
+
+	describe('children', function () {
+		it('get children for a original family member', function () {
+			let person = new Person({name: 'Lucy'});
+			let children1 = ['child1', 'child2', 'child3']; 
+			let spouse = new Person({name: 'Mike'});
+			let children2 = ['child4', 'child5'];
+			sandbox.stub(person, 'children').get(() => children1);
+			sandbox.stub(spouse, 'children').get(() => children2);
+
+			sandbox.stub(tree, 'getSpouse').returns(spouse);
+
+			let result = tree.getChildren(person);
+
+			expect(result).to.include.members([...children1, ...children2]);
+			expect(result.length).to.equal(5);
+
+		})
+	})
+
+	describe('siblings', function () {
+		it('get siblings from parent', function () {
+			let parent = new Person({name: 'Mike'});
+			let person = new Person({name: 'Christina'}, parent);
+
+			let getChildrenStub = sandbox.stub(tree, 'getChildren').withArgs(parent).returns([{
+				name: 'Christina',
+				gender: 'female'
+			}, {
+				name: 'Stephan', 
+				gender: 'male'
+			}]);
+
+			let siblingsArray = tree.getSiblings(person);
+
+			expect(siblingsArray.length).to.be.equal(1);
+			expect(siblingsArray[0].name).to.equal('Stephan');
+		})
+
+		it('should not crash when person is undefined', function (){
+			expect(() => tree.getSiblings(undefined)).not.to.throw();
+		})
+
+		it('should return [] if the person doesn\'t have a parent', function () {
+			let person = new Person({name: 'lonelyBoy'});
+			expect(() => tree.getSiblings(person)).not.to.throw();
+
+			let result = tree.getSiblings(person);
+			expect(result).not.to.be.undefined;
+			expect(result.length).to.equal(0);
+		})
+	})
 	
-
-
-
-	it('children', function () {
-		let person = new Person(jsonTree);
-		let children = 'children'; 
-		let getChildrenStub = sandbox.stub(person, 'children').get(() => children);
-
-		let result = tree.getChildren(person);
-
-		expect(result).to.equal(children);	
-	})
-
-	it('siblings', function () {
-		let person = new Person({name: 'Christina'});
-		let parent1 = {name: 'Mike'};
-		let parent2 = {name: 'Yanni'};
-
-		let getParentsStub = sandbox.stub(tree, 'getParents')
-			.withArgs(person)
-			.returns([parent1, parent2]);
-
-		let getChildrenStub = sandbox.stub(tree, 'getChildren');
-		getChildrenStub.withArgs(parent1).returns([{
-			name: 'Christina',
-			gender: 'female'
-		}, {
-			name: 'Stephan', 
-			gender: 'male'
-		}]);
-
-		getChildrenStub.withArgs(parent2).returns([]);
-
-		let siblingsArray = tree.getSiblings(person);
-
-		expect(siblingsArray.length).to.be.equal(1);
-		expect(siblingsArray[0].name).to.equal('Stephan');
-	})
 
 	it('son', function () {
 		let person = new Person(jsonTree);

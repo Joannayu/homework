@@ -30,7 +30,7 @@ class CommandHandler {
 	}
 
 	getRelationshipCommand(name, relationshipType) {
-		console.log('hello this is getRelationshipCommand');
+		// console.log('hello this is getRelationshipCommand');
 	}
 }
 

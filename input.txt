@@ -1,1 +1,2 @@
-GET_RELATIONSHIP Bill Siblings
+GET_RELATIONSHIP Remus Maternal-Aunt 
+GET_RELATIONSHIP Minerva Siblings

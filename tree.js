@@ -6,14 +6,18 @@ class Tree {
 	}
 
 	findPersonByName(name) {
-		return this.findPerson(this.theGreatAncestor, name);
-	}
-
-	findPerson(rootPerson, name) {
 		let flattenArray = this.flattenTree(this.theGreatAncestor);
 		return flattenArray.find( p => {
 			return p.name === name;
 		});
+	}
+
+	getParents(person) {
+		if (person.parent) {
+			return [person.parent, person.parent.spouse];
+		}
+
+		return [];
 	}
 
 	flattenTree(tree) {
@@ -30,16 +34,6 @@ class Tree {
 		});
 
 		return flattenArray;
-	}
-
-	getParents(person) {
-		let flattenArray = this.flattenTree(this.theGreatAncestor);
-		let parent = flattenArray.find(p => 
-				p.children.find(child =>
-					child.name === person.name
-				)
-			);
-		return [parent, parent.spouse];	
 	}
 
 	getChildren(person) {
@@ -133,11 +127,13 @@ class Tree {
 
 	getSpouse(person) {
 		if (person.spouse) {
-			return spouse;
+			return person.spouse;
 		}
 
 		let flattenArray = this.flattenTree(this.theGreatAncestor);
-		return flattenArray.find(p => p.spouse.name === person.name);
+		return flattenArray.find(p => {
+			return p.spouse && p.spouse.name === person.name;
+		});
 	}
 
 	getSistersOfSpouse(person) {

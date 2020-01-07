@@ -1,7 +1,7 @@
 var expect = require('chai').expect;
 const Person = require('../person.js');
 
-describe('should create person', function() {
+describe('should create a person', function() {
 	it ('should create with name', function () {
 		let jsonObj = {
 			name: 'Peter',
@@ -52,5 +52,22 @@ describe('should create person', function() {
 		expect(person.children.length).to.equal(2);
 		expect(person.children[1] instanceof Person).to.equal(true);
 		expect(person.children[0].name).to.equal('Peter');
+	})
+
+	it('should create with parent', function () {
+		let jsonObj = {
+			name: 'Oscar',
+			children: [{
+				name: 'Peter',
+			}, 
+			{
+				name: 'Ming Li'
+			}]
+		};
+
+		let person = new Person (jsonObj);
+		expect(person.children[0].parent).not.to.be.undefined;
+		expect(person.parent).to.be.undefined;
+		expect(person.children[0].parent.name).to.equal('Oscar');
 	})
 });

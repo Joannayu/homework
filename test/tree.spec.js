@@ -15,7 +15,7 @@ describe('construct a tree', function () {
 	})
 });
 
-describe('find person\'s name in the tree', function () {
+describe('find person by name in the tree', function () {
 	const jsonTree = {
 		name: 'Mike',
 		gender: 'male',
@@ -30,8 +30,7 @@ describe('find person\'s name in the tree', function () {
 		}, {
 			name: 'Stephan',
 			gender: 'male'
-		}
-		], 
+		}], 
 		spouse: {
 			name: 'Yanni',
 			gender: 'female'
@@ -61,6 +60,11 @@ describe('find person\'s name in the tree', function () {
 		let target = tree.findPersonByName('Yvonne');
 		expect(target).to.not.be.undefined;
 		expect(target.gender).to.equal('female');
+	})
+
+	it('should return undefined when person is not founnd', function () {
+		let target = tree.findPersonByName('Alien');
+		expect(target).to.be.undefined;
 	})
 });
 
@@ -95,31 +99,84 @@ describe('get relationship in the tree', function() {
 		sandbox = sinon.createSandbox();
 	})
 
-	it('parents', function () {
+	describe('parents', function () {
+		it('parents', function () {
+			let person = new Person({
+				name: 'Christina',
+				spouse: {
+					name: 'Peter'
+				},
+				children: [{
+					name: 'Angela',
+					spouse: {
+						name: 'Mike'
+					}
+				}]
+			});
+			let parentsArray = tree.getParents(person.children[0]);
 
-		let person = new Person({name: 'Christina'});
-		let parentsArray = tree.getParents(person);
+			expect(parentsArray).to.not.be.undefined;
+			expect(parentsArray.length).to.be.equal(2);
+			expect(parentsArray[0] instanceof Person).to.be.true;
+			expect([parentsArray[0].name, parentsArray[1].name]).to.include.members(['Christina', 'Peter']);
+		})
 
-		expect(parentsArray).to.not.be.undefined;
-		expect(parentsArray.length).to.be.equal(2);
-
-		expect(parentsArray).to.include(tree.theGreatAncestor.spouse);
-		expect(parentsArray).to.include(tree.theGreatAncestor);
-
+		it('should return [] when no parents are found', function () {
+			let person = new Person({
+				name: 'Christina',
+				spouse: {
+					name: 'Peter'
+				},
+				children: [{
+					name: 'Angela',
+					spouse: {
+						name: 'Mike'
+					}
+				}]
+			});
+			let parentsArray = tree.getParents(person);
+			expect(parentsArray).to.not.be.undefined;
+			expect(parentsArray.length).to.equal(0);
+		})
 	})
+	
+
+
 
 	it('children', function () {
 		let person = new Person(jsonTree);
-		let childrenArray = tree.getChildren(person);
-		expect(childrenArray).to.equal(person.children);	
+		let children = 'children'; 
+		let getChildrenStub = sandbox.stub(person, 'children').get(() => children);
+
+		let result = tree.getChildren(person);
+
+		expect(result).to.equal(children);	
 	})
 
 	it('siblings', function () {
 		let person = new Person({name: 'Christina'});
+		let parent1 = {name: 'Mike'};
+		let parent2 = {name: 'Yanni'};
+
+		let getParentsStub = sandbox.stub(tree, 'getParents')
+			.withArgs(person)
+			.returns([parent1, parent2]);
+
+		let getChildrenStub = sandbox.stub(tree, 'getChildren');
+		getChildrenStub.withArgs(parent1).returns([{
+			name: 'Christina',
+			gender: 'female'
+		}, {
+			name: 'Stephan', 
+			gender: 'male'
+		}]);
+
+		getChildrenStub.withArgs(parent2).returns([]);
+
 		let siblingsArray = tree.getSiblings(person);
 
 		expect(siblingsArray.length).to.be.equal(1);
-		expect(siblingsArray).to.include(tree.theGreatAncestor.children[1]);
+		expect(siblingsArray[0].name).to.equal('Stephan');
 	})
 
 	it('son', function () {
@@ -319,14 +376,47 @@ describe('get relationship in the tree', function() {
 		expect(maternalAunt).to.equal(sisters);
 	})
 
-	it('spouse', function () {
-		let person = {
-			name: 'Yanni'
-		};
+	describe('spouse', function () {
+		it('when spouse is in first layer', function () {
+			let person = {
+				name: 'Yanni'
+			};
 
-		let spouse = tree.getSpouse(person);
-		expect(spouse.name).to.equal('Mike');
+			let spouse = tree.getSpouse(person);
+			expect(spouse.name).to.equal('Mike');
+		})
+
+		it('when finding the spouse of an original member of the family tree', function () {
+			let person = new Person ({
+					name: 'Nancy',
+					spouse: {
+						name: 'Louis'
+					}
+				});
+			let spouse = tree.getSpouse(person);
+			expect(spouse.name).to.equal('Louis');
+		})
+
+		it('when spouse may be undefined before hitting on the correct target', function () {
+			let person = {
+				name: 'Yanni',
+				spouse: {
+					name: 'Justin'
+				},
+				children: [{
+					name: 'Nancy',
+					spouse: {
+						name: 'Louis'
+					}
+				}]
+			};
+
+			tree = new Tree(person);
+			let spouse = tree.getSpouse({name: 'Louis'});
+			expect(spouse.name).to.equal('Nancy');
+		})
 	})
+	
 
 	it('spouse\'s sisters', function () {
 		let person = 'person';

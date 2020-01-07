@@ -11,5 +11,10 @@
     "tree"
   ],
   "author": "Zhou Yu",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^7.0.0",
+    "sinon": "^8.0.4"
+  }
 }

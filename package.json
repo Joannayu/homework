@@ -1,0 +1,15 @@
+{
+  "name": "geektrust",
+  "version": "1.0.0",
+  "description": "long long ago, there's a king called King Arthur, he's living happily with his family on a planent called whatsoever.",
+  "main": "geektrust.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "family",
+    "tree"
+  ],
+  "author": "Zhou Yu",
+  "license": "ISC"
+}

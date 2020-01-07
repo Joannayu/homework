@@ -13,7 +13,7 @@ class Tree {
 	}
 
 	getParents(person) {
-		if (person.parent) {
+		if (person && person.parent) {
 			return [person.parent, person.parent.spouse];
 		}
 

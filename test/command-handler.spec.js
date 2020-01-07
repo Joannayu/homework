@@ -299,7 +299,7 @@ describe('execute GET_RELATIONSHIP', function () {
 	})
 })
 
-describe('ADD_CHILD', function () {
+describe('execute ADD_CHILD', function () {
 	var sandbox;
 	var commandHandler;
 	beforeEach(() => {

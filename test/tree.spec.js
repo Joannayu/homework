@@ -100,7 +100,7 @@ describe('get relationship in the tree', function() {
 	})
 
 	describe('parents', function () {
-		it('parents', function () {
+		it('should return parents of a person', function () {
 			let person = new Person({
 				name: 'Christina',
 				spouse: {
@@ -119,6 +119,10 @@ describe('get relationship in the tree', function() {
 			expect(parentsArray.length).to.be.equal(2);
 			expect(parentsArray[0] instanceof Person).to.be.true;
 			expect([parentsArray[0].name, parentsArray[1].name]).to.include.members(['Christina', 'Peter']);
+		})
+
+		it('should not crash when input is undefined', function () {
+			expect(() => tree.getParents(undefined)).not.to.throw();
 		})
 
 		it('should return [] when no parents are found', function () {
@@ -673,7 +677,7 @@ describe('add child', function () {
 			expect(result).to.be.true;
 		})
 
-		it('if they have parents ', function () {
+		it('if they have parents', function () {
 			let tree = new Tree();
 			let person = new Person({
 				name: 'someone',

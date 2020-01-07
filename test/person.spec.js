@@ -76,7 +76,7 @@ describe('should create a person', function() {
 	})
 });
 
-describe('isMale', function () {
+describe('check gender of a person', function () {
 	it('should return true when person is male', function () {
 		let person = new Person({
 			gender: 'male'

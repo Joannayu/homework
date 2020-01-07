@@ -24,7 +24,7 @@ describe('should create person - ', function() {
 		expect(person.gender).to.equal('female');
 	});
 
-	it('should create a person with spouse', function (){
+	it('should create with spouse', function (){
 		let jsonObj = {
 			name: 'Mark',
 			spouse: {

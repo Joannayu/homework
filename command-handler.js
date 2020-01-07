@@ -4,6 +4,7 @@ const Tree = require('./tree.js');
 class CommandHandler {
 	constructor (context) {
 		this.context = context;
+		this.tree = new Tree(context);
 	}
 
 	execute(lines) {
@@ -22,15 +23,35 @@ class CommandHandler {
 
 		switch(params[0]) {
 			case 'GET_RELATIONSHIP': 
-				this.getRelationshipCommand(params[1], params[2]);
+				this.getRelationshipHandler(params[1], params[2]);
 				break;
 			default: 
 				return;
 		}
 	}
 
-	getRelationshipCommand(name, relationshipType) {
-		// console.log('hello this is getRelationshipCommand');
+	getRelationshipHandler(name, relationshipType) {
+		switch(relationshipType) {
+			case 'Siblings': 
+				this.getSiblingsHandler(name);
+				break;
+		}
+	}
+
+	getSiblingsHandler(name) {
+		let person = this.tree.findPersonByName(name);
+		if (!person) {
+			console.log('PERSON_NOT_FOUND');
+			return;
+		}
+
+		let siblingsArray = this.tree.getSiblings(person);
+		let result = this.printPersonArray(siblingsArray);
+		console.log(result);
+	}
+
+	printPersonArray(personArray) {
+		return personArray.map(p => p.name).join(' ');
 	}
 }
 

@@ -14,53 +14,108 @@ describe('construct a tree', function () {
 	})
 });
 
-describe('inquiries on a tree', function () {
-	describe('find person by name', function () {
-			const jsonTree = {
-			name: 'Mike',
-			gender: 'male',
+describe('find person by name on a tree', function () {
+	const jsonTree = {
+		name: 'Mike',
+		gender: 'male',
 
+		children: [{
+			name: 'Christina',
+			gender: 'female',
 			children: [{
-				name: 'Christina',
-				gender: 'female',
-				children: [{
-					name: 'Yvonne',
-					gender: 'female'
-				}]
-			}, {
-				name: 'Stephan',
-				gender: 'male'
-			}
-			], 
-			spouse: {
-				name: 'Yanni',
+				name: 'Yvonne',
 				gender: 'female'
-			}
-		};
+			}]
+		}, {
+			name: 'Stephan',
+			gender: 'male'
+		}
+		], 
+		spouse: {
+			name: 'Yanni',
+			gender: 'female'
+		}
+	};
 
-		let tree = new Tree(jsonTree);
-		it('should find person info in root by name', function () {
-			let target = tree.findPersonByName('Mike');
-			expect(target).to.not.be.undefined;
-			expect(target.gender).to.equal('male');
-		});
-
-		it('should find person in its children', function () {
-			let target = tree.findPersonByName('Stephan');
-			expect(target).to.not.be.undefined;
-			expect(target.gender).to.equal('male');
-		})
-
-		it('should find person in its spouse', function () {
-			let target = tree.findPersonByName('Yanni');
-			expect(target).to.not.be.undefined;
-			expect(target.gender).to.equal('female');
-		})
-
-		it('should be able to find the person in the third layer', function () {
-			let target = tree.findPersonByName('Yvonne');
-			expect(target).to.not.be.undefined;
-			expect(target.gender).to.equal('female');
-		})
+	let tree = new Tree(jsonTree);
+	it('should find person without parent', function () {
+		let target = tree.findPersonByName('Mike');
+		expect(target).to.not.be.undefined;
+		expect(target.gender).to.equal('male');
 	});
+
+	it('should find person as a child', function () {
+		let target = tree.findPersonByName('Stephan');
+		expect(target).to.not.be.undefined;
+		expect(target.gender).to.equal('male');
+	})
+
+	it('should find person as a spouse', function () {
+		let target = tree.findPersonByName('Yanni');
+		expect(target).to.not.be.undefined;
+		expect(target.gender).to.equal('female');
+	})
+
+	it('should find person as a grandchild', function () {
+		let target = tree.findPersonByName('Yvonne');
+		expect(target).to.not.be.undefined;
+		expect(target.gender).to.equal('female');
+	})
+});
+
+describe('get relationship', function() {
+
+	var tree;
+	const jsonTree = {
+		name: 'Mike',
+		gender: 'male',
+
+		children: [{
+			name: 'Christina',
+			gender: 'female',
+			children: [{
+				name: 'Yvonne',
+				gender: 'female'
+			}]
+		}, {
+			name: 'Stephan',
+			gender: 'male'
+		}
+		], 
+		spouse: {
+			name: 'Yanni',
+			gender: 'female'
+		}
+	};
+
+	beforeEach(() => {
+		tree = new Tree(jsonTree);
+	})
+
+	it('parents', function () {
+
+		let person = new Person({name: 'Christina'});
+		let parentsArray = tree.getParents(person);
+
+		expect(parentsArray).to.not.be.undefined;
+		expect(parentsArray.length).to.be.equal(2);
+
+		expect(parentsArray).to.include(tree.theGreatAncestor.spouse);
+		expect(parentsArray).to.include(tree.theGreatAncestor);
+
+	})
+
+	it('children', function () {
+		let person = new Person(jsonTree);
+		let childrenArray = tree.getChildren(person);
+		expect(childrenArray).to.equal(person.children);	
+	})
+
+	it('siblings', function () {
+		let person = new Person({name: 'Christina'});
+		let siblingsArray = tree.getSiblings(person);
+
+		expect(siblingsArray.length).to.be.equal(1);
+		expect(siblingsArray).to.include(tree.theGreatAncestor.children[1]);
+	})
 });

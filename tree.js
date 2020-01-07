@@ -31,6 +31,33 @@ class Tree {
 
 		return flattenArray;
 	}
+
+	getParents(person) {
+		let flattenArray = this.flattenTree(this.theGreatAncestor);
+		let parent = flattenArray.find(p => 
+				p.children.find(child =>
+					child.name === person.name
+				)
+			);
+		return [parent, parent.spouse];	
+	}
+
+	getChildren(person) {
+		return person.children;
+	}
+
+	getSiblings(person) {
+		let parents = this.getParents(person);
+
+		let parentsChildren = [];
+		parents.forEach(p => {
+			parentsChildren.push(...this.getChildren(p));
+		});
+
+		let siblings = parentsChildren.filter(p => p.name !== person.name);
+
+		return siblings;
+	}
 }
 
 module.exports = Tree;

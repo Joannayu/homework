@@ -4,7 +4,8 @@
   "description": "long long ago, there's a king called King Arthur, he's living happily with his family on a planent called whatsoever.",
   "main": "geektrust.js",
   "scripts": {
-    "test": "test"
+    "test": "mocha",
+    "start": "node geektrust.js"
   },
   "keywords": [
     "family",

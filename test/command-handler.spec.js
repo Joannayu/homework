@@ -31,7 +31,7 @@ describe('analyze command: ',function () {
 
 	it('should execute multiple lines of command', function () {
 		let lines = 'line1 \n line2 \n line3';
-		var executeLineStub = sandbox.stub(commandHandler, 'executeLine');
+		let executeLineStub = sandbox.stub(commandHandler, 'executeLine');
 
 		commandHandler.execute(lines);
 
@@ -41,7 +41,7 @@ describe('analyze command: ',function () {
 
 	it('should execute GET_RELATIONSHIP command', function () {
 		let line = 'GET_RELATIONSHIP someName Nephew';
-		var getRelationshipStub = sandbox.stub(commandHandler, 'getRelationship');
+		let getRelationshipStub = sandbox.stub(commandHandler, 'getRelationship');
 
 		commandHandler.executeLine(line);
 
@@ -51,7 +51,7 @@ describe('analyze command: ',function () {
 
 	it('should not execute GET_RELATIONSHIP when parameters are not enough', function () {
 		let line = 'GET_RELATIONSHIP someName';
-		var getRelationshipStub = sandbox.stub(commandHandler, 'getRelationship');
+		let getRelationshipStub = sandbox.stub(commandHandler, 'getRelationship');
 
 		expect(() => commandHandler.executeLine(line)).not.to.throw(); // executeLine is being called;
 
@@ -61,7 +61,7 @@ describe('analyze command: ',function () {
 
 	it('should execute ADD_CHILD command', function () {
 		let line = 'ADD_CHILD Flora Minerva Female';
-		var addChildStub = sandbox.stub(commandHandler, 'addChild');
+		let addChildStub = sandbox.stub(commandHandler, 'addChild');
 
 		commandHandler.executeLine(line);
 
@@ -71,7 +71,7 @@ describe('analyze command: ',function () {
 
 	it('should not execute ADD_CHILD when parameters are not enough', function () {
 		let line = 'ADD_CHILD Flora Minerva';
-		var addChildStub = sandbox.stub(commandHandler, 'addChild');
+		let addChildStub = sandbox.stub(commandHandler, 'addChild');
 
 		expect(() => commandHandler.executeLine(line)).not.to.throw(); // executeLine is being called;
 
@@ -80,7 +80,7 @@ describe('analyze command: ',function () {
 
 	it('should not execute undefined command' , function () {
 		let command = 'SOME_RANDOM_COMMAND someName Nephew';
-		var getRelationshipStub = sandbox.stub(commandHandler, 'getRelationship');
+		let getRelationshipStub = sandbox.stub(commandHandler, 'getRelationship');
 
 		commandHandler.executeLine(command);
 
@@ -94,8 +94,8 @@ describe('analyze command: ',function () {
 
 describe('execute GET_RELATIONSHIP', function () {
 	describe('for each type', function () {
-		var sandbox;
-		var commandHandler;
+		let sandbox;
+		let commandHandler;
 
 		beforeEach(function() {
 			sandbox = sinon.createSandbox();
@@ -300,8 +300,8 @@ describe('execute GET_RELATIONSHIP', function () {
 })
 
 describe('execute ADD_CHILD', function () {
-	var sandbox;
-	var commandHandler;
+	let sandbox;
+	let commandHandler;
 	beforeEach(() => {
 		sandbox = sinon.createSandbox();
 		commandHandler = new CommandHandler({name: 'somePerson'});

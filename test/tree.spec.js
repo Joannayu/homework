@@ -1,7 +1,7 @@
 const Person = require('../person.js');
 const expect = require('chai').expect;
 const Tree = require('../tree.js');
-var sinon = require('sinon');
+const sinon = require('sinon');
 
 describe('construct a tree', function () {
 	it('should create a tree with Json', function () {
@@ -70,7 +70,7 @@ describe('find person by name in the tree', function () {
 
 describe('get relationship in the tree', function() {
 
-	var tree;
+	let tree;
 	const jsonTree = {
 		name: 'Mike',
 		gender: 'male',
@@ -92,7 +92,7 @@ describe('get relationship in the tree', function() {
 			gender: 'female'
 		}
 	};
-	var sandbox;
+	let sandbox;
 
 	beforeEach(() => {
 		tree = new Tree(jsonTree);
@@ -568,7 +568,7 @@ describe('get relationship in the tree', function() {
 });
 
 describe('add child', function () {
-	var sandbox;
+	let sandbox;
 	beforeEach(() => {
 		sandbox = sinon.createSandbox();
 	});

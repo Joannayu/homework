@@ -24,7 +24,7 @@ describe('analyze command: ',function () {
 	beforeEach(function () {
 		let familyTree = {
 			name: 'Tim'
-		}
+		};
 		sandbox = sinon.createSandbox();
 		commandHandler = new CommandHandler(familyTree);
 	})
@@ -117,7 +117,7 @@ describe('execute GET_RELATIONSHIP', function () {
 		});
 
 		it('siblings', function () {
-			let siblings = 'siblingsResult'
+			let siblings = 'siblingsResult';
 			let person = 'personX';
 
 			let siblingsStub = sandbox.stub(commandHandler.tree, 'getSiblings')
@@ -230,7 +230,7 @@ describe('execute GET_RELATIONSHIP', function () {
 
 		it('undefined relationship type', function () {
 			let person = 'person';
-			let paternalUncleStub = sandbox.stub(commandHandler.tree, 'getPaternalUncles')
+			let paternalUncleStub = sandbox.stub(commandHandler.tree, 'getPaternalUncles');
 
 			let result = commandHandler.getRelationshipForPerson(person, 'Something-Random-Type');
 
@@ -248,7 +248,7 @@ describe('execute GET_RELATIONSHIP', function () {
 
 		beforeEach(function() {
 			sandbox = sinon.createSandbox();
-   			sandbox.stub(console, 'log')//;.callThrough();
+   			sandbox.stub(console, 'log'); //.callThrough();
    			commandHandler = new CommandHandler({name: 'someAncestor'});
   		});
 

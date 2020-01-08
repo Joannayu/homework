@@ -97,7 +97,7 @@ describe('get relationship in the tree', function() {
 	beforeEach(() => {
 		tree = new Tree(jsonTree);
 		sandbox = sinon.createSandbox();
-	})
+	});
 
 	describe('parents', function () {
 		it('should return parents of a person', function () {
@@ -275,7 +275,7 @@ describe('get relationship in the tree', function() {
 	it('brothers', function () {
 		let person = new Person({
 			name: 'person'
-		})
+		});
 
 		let getSiblingsStub = sandbox.stub(tree, 'getSiblings')
 			.withArgs(person)
@@ -564,14 +564,14 @@ describe('get relationship in the tree', function() {
 	
 	afterEach(function() {
 		sandbox.restore();
-	});
+	})
 });
 
 describe('add child', function () {
 	let sandbox;
 	beforeEach(() => {
 		sandbox = sinon.createSandbox();
-	});
+	})
 
 	it('add child by given the name of an origianl family member', function () {
 		let tree = new Tree();
@@ -585,7 +585,7 @@ describe('add child', function () {
 		});
 		let spouse = new Person ({
 			name: 'Peter'
-		})
+		});
 		sandbox.stub(tree, 'findPersonByName').withArgs('Lily').returns(person);
 		sandbox.stub(tree, 'getSpouse').withArgs(person).returns(spouse);
 		sandbox.stub(tree, 'isOriginalFamilyMember').withArgs(person).returns(true);
@@ -608,7 +608,7 @@ describe('add child', function () {
 		});
 		let person = new Person ({
 			name: 'Lily'
-		})
+		});
 
 		sandbox.stub(tree, 'findPersonByName').withArgs('Lily').returns(person);
 		sandbox.stub(tree, 'getSpouse').withArgs(person).returns(spouse);
@@ -632,13 +632,13 @@ describe('add child', function () {
 		});
 		let person = new Person ({
 			name: 'Lily'
-		})
+		});
 
 		sandbox.stub(tree, 'findPersonByName').withArgs('Lily').returns(person);
 		sandbox.stub(tree, 'getSpouse').withArgs(person).returns(spouse);
 		sandbox.stub(tree, 'isOriginalFamilyMember').withArgs(person).returns(false);
 
-		tree.addChild('Lily', 'Angela', 'Female')
+		tree.addChild('Lily', 'Angela', 'Female');
 
 		expect(spouse.children.find(p => p.name === 'Angela').gender).to.equal('female');
 	})	
@@ -655,12 +655,12 @@ describe('add child', function () {
 		});
 		let spouse = new Person ({
 			name: 'Peter'
-		})
+		});
 		sandbox.stub(tree, 'findPersonByName').withArgs('Lily').returns(person);
 		sandbox.stub(tree, 'getSpouse').withArgs(person).returns(spouse);
 		sandbox.stub(tree, 'isOriginalFamilyMember').withArgs(person).returns(true);
 
-		tree.addChild('Lily', 'Angela', 'Female')
+		tree.addChild('Lily', 'Angela', 'Female');
 
 		expect(person.children.find(p => p.name === 'Angela').gender).to.equal('female');
 	})	

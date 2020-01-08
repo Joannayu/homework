@@ -10,7 +10,7 @@ describe('should create a person', function() {
 		let jsonObj = {
 			name: 'Peter',
 			gender: 'male'
-		}
+		};
 
 		let person = new Person(jsonObj);
 		expect(person.name).to.equal('Peter');
@@ -21,7 +21,7 @@ describe('should create a person', function() {
 		let jsonObj = {
 			name: 'Julie',
 			gender: 'female'
-		}
+		};
 
 		let person = new Person(jsonObj);
 		expect(person.name).to.equal('Julie');
@@ -34,7 +34,7 @@ describe('should create a person', function() {
 			spouse: {
 				name: 'Nancy'
 			}
-		}
+		};
 
 		let person = new Person(jsonObj);
 		expect(person.spouse instanceof Person).to.equal(true);
@@ -80,7 +80,7 @@ describe('check gender of a person', function () {
 	it('should return true when person is male', function () {
 		let person = new Person({
 			gender: 'male'
-		})
+		});
 
 		expect(person.isMale()).to.be.true;
 	})
@@ -88,7 +88,7 @@ describe('check gender of a person', function () {
 	it('should return false when person is female', function () {
 		let person = new Person({
 			gender: 'female'
-		})
+		});
 
 		expect(person.isMale()).not.to.be.undefined;
 		expect(person.isMale()).not.to.be.true;
